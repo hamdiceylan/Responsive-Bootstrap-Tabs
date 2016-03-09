@@ -1,0 +1,122 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Tab drop for Bootstrap, from Twitter</title>
+    <link href="http://www.eyecon.ro/bootstrap-tabdrop/css/bootstrap.css" rel="stylesheet">
+    <link href="http://www.eyecon.ro/bootstrap-tabdrop/css/bootstrap-responsive.css" rel="stylesheet">
+    <link href="http://www.eyecon.ro/bootstrap-tabdrop/css/tabdrop.css" rel="stylesheet">
+	<style>
+	.container {
+		background: #fff;
+	}
+	#alert {
+		display: none;
+	}
+	</style>
+    <link href="js/google-code-prettify/prettify.css" rel="stylesheet">
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+
+  <body>
+  <div class="container">
+    <section id="typeahead">
+      <div class="page-header">
+
+      </div>
+      <div class="row">
+        <div class="span12 columns">
+          <h2>Example</h2>
+          <div class="well">
+  <div class="tabbable tabs-below">
+  <div class="tab-content">
+    <div class="tab-pane active" id="btab1">
+      <p>I'm in Section 1.</p>
+    </div>
+    <div class="tab-pane" id="btab2">
+      <p>Howdy, I'm in Section 2.</p>
+    </div>
+    <div class="tab-pane" id="btab3">
+      <p>Howdy, I'm in Section 3.</p>
+    </div>
+    <div class="tab-pane" id="btab4">
+      <p>Howdy, I'm in Section 4.</p>
+    </div>
+    <div class="tab-pane" id="btab5">
+      <p>Howdy, I'm in Section 5.</p>
+    </div>
+    <div class="tab-pane" id="btab6">
+      <p>Howdy, I'm in Section 6.</p>
+    </div>
+    <div class="tab-pane" id="btab7">
+      <p>Howdy, I'm in Section 7.</p>
+    </div>
+    <div class="tab-pane" id="btab8">
+      <p>Howdy, I'm in Section 8.</p>
+    </div>
+    <div class="tab-pane" id="btab9">
+      <p>Howdy, I'm in Section 9.</p>
+    </div>
+  </div>
+  <ul class="nav nav-tabs">
+    <li class="active"><a href="#tab1" data-toggle="tab">Italy</a></li>
+    <li><a href="#btab2" data-toggle="tab">UK</a></li>
+    <li><a href="#btab3" data-toggle="tab">Republic of Long Country</a></li>
+    <li><a href="#btab4" data-toggle="tab">China</a></li>
+    <li><a href="#btab5" data-toggle="tab">Argentina</a></li>
+    <li><a href="#btab6" data-toggle="tab">Chele</a></li>
+    <li><a href="#btab7" data-toggle="tab">Mexico</a></li>
+    <li><a href="#btab8" data-toggle="tab">India</a></li>
+    <li><a href="#btab9" data-toggle="tab">Switzerland</a></li>
+  </ul>
+</div>
+          </div>
+         
+
+        </div>
+      </div>
+    </section>
+</div>
+
+   <script src="http://www.eyecon.ro/bootstrap-tabdrop/js/google-code-prettify/prettify.js"></script>
+    <script src="http://www.eyecon.ro/bootstrap-tabdrop/js/jquery.js"></script>
+    <script src="http://www.eyecon.ro/bootstrap-tabdrop/js/bootstrap-dropdown.js"></script>
+    <script src="http://www.eyecon.ro/bootstrap-tabdrop/js/bootstrap-tab.js"></script>
+    <script src="http://www.eyecon.ro/bootstrap-tabdrop/js/bootstrap-tabdrop.js"></script>
+	<script>
+	if (top.location != location) {
+    top.location.href = document.location.href ;
+  }
+		$(function(){
+			window.prettyPrint && prettyPrint();
+            $('.nav-tabs:first').tabdrop();
+            $('.nav-tabs:last').tabdrop({text: 'More options'});
+            $('.nav-pills').tabdrop({text: 'With pills'});
+		});
+        $(document).ready(function(){
+            $(document).on("shown", 'a[data-toggle="tab"]', function (e) {
+                var clickedItemSource = e.target.closest('ul').className;
+                var clickedItem = e.target.closest('li');
+                console.log(clickedItem);
+                
+                if(clickedItemSource == "dropdown-menu"){
+                    var removedFromMain = $(".nav-tabs li:last").remove();
+                    $(".nav-tabs").prepend(clickedItem);
+                    $(".dropdown-menu").append(removedFromMain);
+                }
+                console.log(); // Active Tab
+            });
+        });
+	</script>
+	<script src="http://www.google-analytics.com/urchin.js" type="text/javascript">
+</script>
+<script type="text/javascript">
+_uacct = "UA-106117-1";
+urchinTracker();
+</script>
+  </body>
+ </html>
