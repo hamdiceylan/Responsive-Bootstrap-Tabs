@@ -15,7 +15,6 @@
 		display: none;
 	}
 	</style>
-    <link href="js/google-code-prettify/prettify.css" rel="stylesheet">
     <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
     <!--[if lt IE 9]>
       <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
@@ -62,16 +61,16 @@
       <p>Howdy, I'm in Section 9.</p>
     </div>
   </div>
-  <ul class="nav nav-tabs">
-    <li class="active"><a href="#tab1" data-toggle="tab">Italy</a></li>
-    <li><a href="#btab2" data-toggle="tab">UK</a></li>
-    <li><a href="#btab3" data-toggle="tab">Republic of Long Country</a></li>
-    <li><a href="#btab4" data-toggle="tab">China</a></li>
-    <li><a href="#btab5" data-toggle="tab">Argentina</a></li>
-    <li><a href="#btab6" data-toggle="tab">Chele</a></li>
-    <li><a href="#btab7" data-toggle="tab">Mexico</a></li>
-    <li><a href="#btab8" data-toggle="tab">India</a></li>
-    <li><a href="#btab9" data-toggle="tab">Switzerland</a></li>
+  <ul class="nav nav-tabs" style="max-height:50px; position:relative;">
+    <li id="tabLink1" class="active"><a href="#tab1"   data-toggle="tab">Italy</a></li>
+    <li id="tabLink2"><a href="#btab2"  data-toggle="tab">UK</a></li>
+    <li id="tabLink3"><a href="#btab3"  data-toggle="tab">Republic of Long Country</a></li>
+    <li id="tabLink4"><a href="#btab4"  data-toggle="tab">China</a></li>
+    <li id="tabLink5"><a href="#btab5"  data-toggle="tab">Argentina</a></li>
+    <li id="tabLink6"><a href="#btab6"  data-toggle="tab">Chele</a></li>
+    <li id="tabLink7"><a href="#btab7"  data-toggle="tab">Mexico</a></li>
+    <li id="tabLink8"><a href="#btab8"  data-toggle="tab">India</a></li>
+    <li id="tabLink9"><a href="#btab9"  data-toggle="tab">Switzerland</a></li>
   </ul>
 </div>
           </div>
@@ -86,7 +85,108 @@
     <script src="http://www.eyecon.ro/bootstrap-tabdrop/js/jquery.js"></script>
     <script src="http://www.eyecon.ro/bootstrap-tabdrop/js/bootstrap-dropdown.js"></script>
     <script src="http://www.eyecon.ro/bootstrap-tabdrop/js/bootstrap-tab.js"></script>
-    <script src="http://www.eyecon.ro/bootstrap-tabdrop/js/bootstrap-tabdrop.js"></script>
+    <script type="text/javascript">
+
+ 
+!function( $ ) {
+
+	var WinReszier = (function(){
+		var registered = [];
+		var inited = false;
+		var timer;
+		var resize = function(ev) {
+			clearTimeout(timer);
+			timer = setTimeout(notify, 5);
+		};
+		var notify = function() {
+			for(var i=0, cnt=registered.length; i<cnt; i++) {
+				registered[i].apply();
+			}
+		};
+		return {
+			register: function(fn) {
+				registered.push(fn);
+				if (inited === false) {
+					$(window).bind('resize', resize);
+					inited = true;
+				}
+			},
+			unregister: function(fn) {
+				for(var i=0, cnt=registered.length; i<cnt; i++) {
+					if (registered[i] == fn) {
+						delete registered[i];
+						break;
+					}
+				}
+			}
+		}
+	}());
+
+	var TabDrop = function(element, options) {
+		this.element = $(element);
+		this.dropdown = $('<li class="dropdown hide pull-right tabdrop"><a class="dropdown-toggle" data-toggle="dropdown" href="#">'+''+' <b class="caret"></b></a><ul class="dropdown-menu"></ul></li>')
+							.prependTo(this.element);
+		if (this.element.parent().is('.tabs-below')) {
+			this.dropdown.addClass('dropup');
+		}
+		WinReszier.register($.proxy(this.layout, this));
+		this.layout();
+	};
+
+	TabDrop.prototype = {
+		constructor: TabDrop,
+
+		layout: function() {
+			var collection = [];
+			this.dropdown.removeClass('hide');
+			this.element
+				.append(this.dropdown.find('li'))
+				.find('>li')
+				.not('.tabdrop')
+				.each(function(){
+					if(this.offsetTop > 0) {
+						collection.push(this);
+					}
+				});
+			if (collection.length > 0) {
+				collection = $(collection);
+				this.dropdown
+					.find('ul')
+					.empty()
+					.append(collection);
+				if (this.dropdown.find('.active').length == 1) {
+					this.dropdown.addClass('active');
+				} else {
+					this.dropdown.removeClass('active');
+				}
+			} else {
+				this.dropdown.addClass('hide');
+			}
+		}
+	}
+
+	$.fn.tabdrop = function ( option ) {
+		return this.each(function () {
+			var $this = $(this),
+				data = $this.data('tabdrop'),
+				options = typeof option === 'object' && option;
+			if (!data)  {
+				$this.data('tabdrop', (data = new TabDrop(this, $.extend({}, $.fn.tabdrop.defaults,options))));
+			}
+			if (typeof option == 'string') {
+				data[option]();
+			}
+		})
+	};
+
+	$.fn.tabdrop.defaults = {
+		text: '<i class="icon-align-justify"></i>'
+	};
+
+	$.fn.tabdrop.Constructor = TabDrop;
+
+}( window.jQuery );
+    </script>
 	<script>
 	if (top.location != location) {
     top.location.href = document.location.href ;
@@ -99,16 +199,38 @@
 		});
         $(document).ready(function(){
             $(document).on("shown", 'a[data-toggle="tab"]', function (e) {
+                var totalWidth  =0;
+                $(".nav-tabs").each(function( index ) {
+                     totalWidth=  $( this ).width();
+                });
+                console.log("Toplam",totalWidth);
+                var totalWidthFirst = totalWidth;
                 var clickedItemSource = e.target.closest('ul').className;
                 var clickedItem = e.target.closest('li');
-                console.log(clickedItem);
+                var clickedItemId= e.target.closest('li').id;
+                var clickedItemWidth = $("#"+clickedItemId).width();
                 
+
                 if(clickedItemSource == "dropdown-menu"){
-                    var removedFromMain = $(".nav-tabs li:last").remove();
+                    var i = 1;
+                    var clickedItemWidthFirst = clickedItemWidth;
+                    while(clickedItemWidth > -20){
+                          var removedItemWidth = $(".nav-tabs li:last").width();
+                          var removedFromMain = $(".nav-tabs li:last").remove();
+                          $(".dropdown-menu").append(removedFromMain);
+                          clickedItemWidth -= removedItemWidth;
+                          totalWidth -= removedItemWidth;
+                    }
                     $(".nav-tabs").prepend(clickedItem);
-                    $(".dropdown-menu").append(removedFromMain);
+                    //console.log("Önce",totalWidthFirst);
+                    //console.log("Sonra",totalWidth+clickedItemWidthFirst);                    
+                    var son  =0;
+                $(".nav-tabs").each(function( index ) {
+                     son=  $( this ).width();
+                });
+                console.log(son);
                 }
-                console.log(); // Active Tab
+
             });
         });
 	</script>
